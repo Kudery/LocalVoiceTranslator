@@ -1,8 +1,14 @@
 name: release
 
+# Two ways to release:
+#  - push a tag "vX.Y.Z" (must match localvoicetranslator.__version__), or
+#  - run this workflow manually (Actions -> release -> Run workflow): it tags the
+#    selected branch with "v" + __version__ and creates the release.
+
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -20,15 +26,24 @@ jobs:
         run: |
           sudo apt-get install -y xvfb
           xvfb-run -a python -m pytest -v
-      - name: Check tag matches package version
+      - name: Determine tag
         run: |
           version=$(python -c "import localvoicetranslator as m; print(m.__version__)")
-          test "v$version" = "$GITHUB_REF_NAME" || { echo "Tag $GITHUB_REF_NAME != version $version"; exit 1; }
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            test "v$version" = "$GITHUB_REF_NAME" || { echo "Tag $GITHUB_REF_NAME != version $version"; exit 1; }
+          fi
+          echo "TAG=v$version" >> "$GITHUB_ENV"
+          echo "VERSION=$version" >> "$GITHUB_ENV"
       - name: Extract release notes from CHANGELOG.md
         run: |
-          awk -v v="## ${GITHUB_REF_NAME#v}" '$0==v{f=1;next} /^## /{f=0} f' CHANGELOG.md > notes.md
-          test -s notes.md || { echo "No CHANGELOG entry for $GITHUB_REF_NAME"; exit 1; }
+          awk -v v="## $VERSION" '$0==v{f=1;next} /^## /{f=0} f' CHANGELOG.md > notes.md
+          test -s notes.md || { echo "No CHANGELOG entry for $VERSION"; exit 1; }
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --title "LocalVoiceTranslator $GITHUB_REF_NAME" --notes-file notes.md --verify-tag
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists"; exit 1
+          fi
+          gh release create "$TAG" --target "$GITHUB_SHA" \
+            --title "LocalVoiceTranslator $TAG" --notes-file notes.md
