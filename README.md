@@ -2,9 +2,7 @@
 
 Transcribe voice messages and other audio **locally** with [faster-whisper](https://github.com/SYSTRAN/faster-whisper) and translate them into 20+ languages with your own [Ollama](https://ollama.com) model. No cloud, no API keys, no admin rights. After the first model download everything works offline.
 
-<!-- Screenshot: add docs/screenshot.png and uncomment
 ![LocalVoiceTranslator](docs/screenshot.png)
--->
 
 ## Features
 
