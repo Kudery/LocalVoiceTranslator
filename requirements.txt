@@ -1,0 +1,11 @@
+# Runtime (Python 3.10-3.14). Versions are pinned for reproducible installs.
+faster-whisper==1.2.1
+ctranslate2==4.8.2
+
+# CUDA 12 libraries for GPU transcription (Windows only; not needed for CPU).
+# The Windows wheel of ctranslate2 4.8.2 bundles only the cuDNN loader (cudnn64_9.dll,
+# version 9.10.2.21) and no cuBLAS. cuDNN must match that loader version exactly,
+# otherwise it refuses to load its sub-libraries. Re-check this pin whenever
+# ctranslate2 is upgraded.
+nvidia-cublas-cu12==12.9.1.4; sys_platform == "win32"
+nvidia-cudnn-cu12==9.10.2.21; sys_platform == "win32"

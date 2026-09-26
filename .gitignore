@@ -1,0 +1,32 @@
+# Virtual environments
+venv/
+.venv/
+whisper-env/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local settings (see localvoicetranslator_config.example.json)
+localvoicetranslator_config.json
+
+# Audio and output (private)
+*.ogg
+*.opus
+*.mp3
+*.wav
+*.m4a
+*.flac
+*.aac
+*.wma
+*.webm
+translation*.txt
+
+# Models
+models/
+*.bin
+
+# Misc
+*.log
+.env

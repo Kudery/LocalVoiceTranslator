@@ -1,0 +1,11 @@
+{
+  "model_size": "large-v3-turbo",
+  "device": "auto",
+  "compute_type": "auto",
+  "model_dir": "",
+  "vad": true,
+  "source_language": "Auto-detect",
+  "target_language": "English",
+  "ollama_url": "http://localhost:11434",
+  "ollama_model": "qwen2.5:7b"
+}

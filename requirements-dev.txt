@@ -1,0 +1,2 @@
+# Tests only. They run entirely on mocks: no faster-whisper, GPU or Ollama needed.
+pytest==9.1.1
